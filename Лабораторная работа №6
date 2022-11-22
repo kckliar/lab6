@@ -1,0 +1,30 @@
+classdef Equalizer < handle 
+    properties(Constant)
+        freqArray=[31,62,125,250,500,1000,2000,4000,8000,16000]
+    end
+    properties(Access=public)
+        gain=[1,1,1,1,1,1,1,1,1,1]
+    end
+    properties(Access=protected)
+        bBank=[]
+        initB=[]
+    end
+    properties(GetAccess=public,SetAccess=protected)
+        fS=44100
+        order=64
+    end
+    methods
+        function obj = Equalizer(order,fS)
+            if nargin == 0
+                order = 64;
+                fS = 44100;
+            end
+            obj.order=order;
+            obj.fS=fS;
+        end
+        function[signalOut,initB]=Filtering(obj,signal,bBank,gain,initB)
+            b=sum(gain.*bBank,1);
+            [signalOut,initB]=filter(b,1,signal,initB);
+        end
+    end
+end

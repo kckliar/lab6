@@ -21,7 +21,7 @@ classdef Equalizer < handle
             end
             obj.order=order;
             obj.fS=fS;
-            CreatingFilters();
+            CreatingFilters(obj);
         end
         function[signalOut,initB]=Filtering(obj)
             b=sum(obj.gain.*obj.bBank,1);
@@ -46,14 +46,13 @@ classdef Equalizer < handle
             end
        end
        function [Hdb,w]=GetFreqResponse(obj)
-           b=sum(obj.gain.*obj.bBank);
+           b=sum(obj.gain.*obj.bBank', 2);
            for i=1:10
                [H(i,:),w(i,:)]=freqz(b(i,:),1,obj.order);
            end
            xdb=@(x)20*log10(x); 
-           Hdb=xdb(abs(H));
+           Hdb=xdb(abs(H)); 
            w=(w/pi)*(obj.fS/2);
        end
     end
 end
-
